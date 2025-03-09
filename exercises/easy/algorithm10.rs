@@ -6,6 +6,7 @@
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
+// use std::collections::hash_map::Entry;
 #[derive(Debug, Clone)]
 pub struct NodeNotInGraph;
 impl fmt::Display for NodeNotInGraph {
@@ -30,6 +31,15 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let node1 = edge.0.to_string();
+        let node2 = edge.1.to_string();
+        let value = edge.2;
+        let node1_node2 = (node2.clone(),value);
+        let node2_node1 = (node1.clone(),value);
+        let node1_second = self.adjacency_table_mutable().entry(node1.to_string()).or_insert(Vec::<(String, i32)>::new());
+        node1_second.push(node1_node2);
+        let node2_second = self.adjacency_table_mutable().entry(node2.to_string()).or_insert(Vec::<(String, i32)>::new());
+        node2_second.push(node2_node1);
     }
 }
 pub trait Graph {
@@ -38,10 +48,17 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
+        self.adjacency_table_mutable().entry(node.to_string()).or_insert(Vec::<(String, i32)>::new());
 		true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let node1 = edge.0.to_string();
+        let node2 = edge.1.to_string();
+        let value = edge.2;
+        let tuple = (node2,value);
+        let second = self.adjacency_table_mutable().entry(node1.to_string()).or_insert(Vec::<(String, i32)>::new());
+        second.push(tuple);
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()

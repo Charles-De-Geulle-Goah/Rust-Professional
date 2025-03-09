@@ -10,10 +10,26 @@
 */
 
 use std::fmt::{self, Display, Formatter};
+use std::collections::HashSet;
 
+fn deduplicate(nums:Vec<i32>) -> Vec<i32>{
+    let mut seen:HashSet<_> = HashSet::new();
+    let mut res = Vec::new();
+    for num in nums {
+        if !seen.contains(&num) {
+            seen.insert(num);
+            res.push(num);
+        }
+    }
+    res
+}
 pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
     // TODO: Implement the logic to find the intersection of two arrays
-    Vec::new() // Placeholder return value
+    let nums1_dedup = deduplicate(nums1);
+    let nums2_dedup = deduplicate(nums2);
+    let nums2_set:HashSet<_> = nums2_dedup.into_iter().collect();
+    nums1_dedup.into_iter().filter(|x|nums2_set.contains(x)).collect()
+    // Vec::new() // Placeholder return value
 }
 
 #[cfg(test)]

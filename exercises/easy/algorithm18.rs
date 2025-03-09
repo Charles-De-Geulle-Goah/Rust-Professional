@@ -12,10 +12,25 @@
 */
 
 use std::fmt::{self, Display, Formatter};
+use std::cmp::max;
 
 pub fn merge_intervals(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     // TODO: Implement the logic to merge overlapping intervals
-    Vec::new() // Placeholder return value
+    let mut intervals = intervals;
+    intervals.sort_by(|a,b|a[0].cmp(&b[0]));
+    let mut ans:Vec<Vec<i32>> = vec![];
+    for p in intervals {
+        if let Some(last) = ans.last_mut() {
+            if last[1] < p[0] {
+                ans.push(p);
+            } else {
+                last[1] = max(last[1],p[1]);
+            }
+        } else {
+            ans.push(p);
+        }
+    }
+    ans
 }
 
 #[cfg(test)]

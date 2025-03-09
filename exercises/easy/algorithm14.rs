@@ -10,10 +10,25 @@
 */
 
 use std::fmt::{self, Display, Formatter};
+use std::collections::{HashSet,HashMap}; 
 
+//[4, 5, 6, 7, 5, 4]
 pub fn find_duplicates(nums: Vec<i32>) -> Vec<i32> {
     // TODO: Implement the logic to find all duplicates in the array
-    Vec::new() // Placeholder return value
+    let mut counts = HashMap::new();
+    let mut result = Vec::new();
+    
+    for num in nums {
+        let count = counts.entry(num).or_insert(0);
+        *count += 1;
+        if *count == 2 {
+            result.push(num);
+        }
+    }
+    
+    // 对结果数组进行升序排序
+    result.sort();
+    result
 }
 
 #[cfg(test)]

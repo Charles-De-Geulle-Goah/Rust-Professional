@@ -15,7 +15,27 @@ use std::fmt::{self, Display, Formatter};
 
 pub fn are_anagrams(s1: String, s2: String) -> bool {
     // TODO: Implement the logic to check if two strings are anagrams
-    false // Placeholder return value
+    // if s1.len() != s2.len() {
+    //     return false;
+    // }
+    let mut table = [0;26];
+    for c in s1.chars() {
+        if c.is_ascii_alphabetic() {
+            let idx = (c.to_ascii_lowercase() as u8 - b'a') as usize;
+            table[idx] += 1;
+        }
+    }
+    for c in s2.chars() {
+        if c.is_ascii_alphabetic() {
+            let idx = (c.to_ascii_lowercase() as u8 - b'a') as usize;
+            table[idx] -= 1;
+            if table[idx] < 0 {
+                return false;
+            }
+        }
+    }
+    // true // Placeholder return value
+    table.iter().all(|&count| count == 0)
 }
 
 #[cfg(test)]

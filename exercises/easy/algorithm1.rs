@@ -69,17 +69,35 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
-        }
-	}
 }
 
+//必须单独实现，如果在上面的代码加上std::cmp::PartialOrd+Clone的特型限制，就会出现这种情况：
+//仅仅针对了实现了这些特型的类型才会实现new，其他的不会实现
+impl<T: std::cmp::PartialOrd+Clone> LinkedList<T> {
+    pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
+	{
+		//TODO
+		let la = list_a.length as i32; //list_a的长度
+		let lb = list_b.length as i32; //list_b的长度
+        let mut ca : i32 = 0;  //指向list_a的指针
+        let mut cb : i32 = 0;  //指向list_b的指针
+
+        let mut res = Self::new();  //合并后的链表
+
+        for _ in 0..la+lb {
+            //list_b的节点都遍历完了，或者在a和b没有遍历完的时候a的值小于b的值
+            if cb == lb || ca < la && cb < lb && *(list_a.get(ca).unwrap()) < *(list_b.get(cb).unwrap()) {
+                res.add((*list_a.get(ca).unwrap()).clone());  //把a的节点加入res
+                ca += 1;  //更新指针
+            } else {  //list_a的节点都遍历完了，或者在a和b没有遍历完的时候b的值小于a的值
+                res.add((*list_b.get(cb).unwrap()).clone()); //把b的节点加入res
+                cb += 1;  //更新指针
+            }
+        } 
+
+        res
+	}
+}
 impl<T> Display for LinkedList<T>
 where
     T: Display,

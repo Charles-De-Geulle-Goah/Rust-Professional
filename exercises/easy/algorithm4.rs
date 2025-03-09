@@ -51,12 +51,30 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match self.root {
+            None => {
+                self.root = Some(Box::new(TreeNode::<T>::new(value)));
+            },
+            Some(ref mut rootptr) => { //ref mut:在模式匹配中借用值的可变引用，允许修改值
+                (*rootptr).insert(value);
+            }
+        };
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        let mut bst = &self.root;
+        while let Some(ptr) = bst {
+            if value > (*ptr).value {
+                bst = &(*ptr).right;
+            } else if value < (*ptr).value {
+                bst = &(*ptr).left;
+            } else {
+                return true;
+            }
+        }
+        false
     }
 }
 
@@ -67,6 +85,21 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        if value < self.value {
+            if let Some(left) = &mut self.left {
+                left.insert(value);
+            } else {  //左子树为空的情况
+                self.left = Some(Box::new(TreeNode::new(value)));  
+            }
+        } else if value > self.value {
+            if let Some(right) = &mut self.right {
+                right.insert(value);
+            } else {  //左子树为空的情况
+                self.right = Some(Box::new(TreeNode::new(value)));  
+            }
+        } else {
+            return;
+        }
     }
 }
 

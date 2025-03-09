@@ -74,6 +74,39 @@ impl<T> LinkedList<T> {
     }
 	pub fn reverse(&mut self){
 		// TODO
+        if self.length <= 1 {
+            return;
+        }
+
+        let mut current = self.start;
+        let mut new_start = None;
+        let mut new_end = None;
+
+        for _ in 0..self.length {
+            match current {
+                Some(ptr) => {
+                    let node = unsafe { &mut *ptr.as_ptr() };
+                    let next = node.next;
+                    let prev = node.prev;
+
+                    // 交换 next 和 prev 指针
+                    node.next = prev;
+                    node.prev = next;
+
+                    // 更新 start 和 end 指针
+                    if new_start.is_none() {
+                        new_start = Some(ptr);
+                    }
+                    new_end = current;
+
+                    current = next;
+                },
+                None => break, // 链表已经结束
+            }
+        }
+
+        self.start = new_end;
+        self.end = new_start;
 	}
 }
 
